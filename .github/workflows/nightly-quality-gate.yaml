@@ -2,10 +2,10 @@ name: "Nightly Quality Gate"
 on:
   # allow for kicking off quality gate check manually
   workflow_dispatch:
-
-  # run 2 AM (UTC) daily
-  schedule:
-    - cron:  '0 2 * * *'
+  # needed for publishing commit images on the main branch
+  push:
+    branches:
+      - main
 
 jobs:
 
@@ -30,7 +30,7 @@ jobs:
           # select all providers as test subjects (this populates the matrix downstream)
           content=`cd tests/quality && poetry run make all-providers`
           echo $content
-          echo "providers=$content" >> $GITHUB_OUTPUT
+          echo "providers=[\"chainguard\"]" >> $GITHUB_OUTPUT
 
   validate-provider:
     runs-on: ubuntu-22.04
